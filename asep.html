@@ -1,0 +1,950 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <title>Virtual Trading Platform</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+
+  <style>
+    :root {
+      --bg: #050816;
+      --bg-soft: #0b1020;
+      --bg-card: #111827;
+      --border: #1f2937;
+      --accent: #22c55e;
+      --accent-soft: rgba(34, 197, 94, 0.2);
+      --accent-red: #f97373;
+      --text: #f9fafb;
+      --muted: #9ca3af;
+      --radius-lg: 16px;
+      --shadow-soft: 0 18px 40px rgba(15, 23, 42, 0.8);
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    body {
+      font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: radial-gradient(circle at top left, #020617, #020617 40%, #000 90%);
+      color: var(--text);
+      min-height: 100vh;
+    }
+
+    a {
+      color: inherit;
+      text-decoration: none;
+    }
+
+    nav {
+      position: sticky;
+      top: 0;
+      z-index: 15;
+      backdrop-filter: blur(18px);
+      background: linear-gradient(to bottom, rgba(5, 6, 20, 0.96), rgba(5, 6, 20, 0.8));
+      border-bottom: 1px solid rgba(148, 163, 184, 0.2);
+      padding: 0.7rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 1rem;
+    }
+
+    .nav-left {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+    }
+
+    .logo-mark {
+      width: 36px;
+      height: 36px;
+      border-radius: 999px;
+      background: radial-gradient(circle at 25% 0, #4f46e5, var(--accent));
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      color: white;
+      box-shadow: 0 10px 30px rgba(34, 197, 94, 0.7);
+    }
+
+    .brand {
+      display: flex;
+      flex-direction: column;
+      gap: 0.05rem;
+    }
+
+    .brand span:first-child {
+      font-size: 1rem;
+      font-weight: 600;
+    }
+
+    .brand span:last-child {
+      font-size: 0.75rem;
+      color: var(--muted);
+    }
+
+    .nav-right {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+    }
+
+    .badge {
+      border-radius: 999px;
+      padding: 0.3rem 0.7rem;
+      background: rgba(15, 23, 42, 0.95);
+      border: 1px solid rgba(148, 163, 184, 0.4);
+      font-size: 0.78rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      color: var(--muted);
+    }
+
+    .wallet {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      padding: 0.35rem 0.9rem;
+      border: 1px solid rgba(34, 197, 94, 0.7);
+      font-size: 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.35rem;
+    }
+
+    .wallet-amount {
+      font-weight: 600;
+      color: var(--accent);
+    }
+
+    .btn {
+      border-radius: 999px;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      padding: 0.35rem 0.9rem;
+      display: inline-flex;
+      align-items: center;
+      gap: 0.4rem;
+      background: rgba(15, 23, 42, 0.95);
+      color: var(--muted);
+      border: 1px solid rgba(148, 163, 184, 0.5);
+      transition: all 0.12s ease-out;
+      white-space: nowrap;
+    }
+
+    .btn:hover {
+      background: rgba(30, 64, 175, 0.9);
+      color: white;
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .btn-primary {
+      background: linear-gradient(135deg, #4f46e5, #22c55e);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 12px 30px rgba(34, 197, 94, 0.45);
+    }
+
+    .btn-primary:hover {
+      opacity: 0.95;
+      box-shadow: 0 16px 40px rgba(34, 197, 94, 0.6);
+    }
+
+    .wrapper {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.5rem 1.25rem 2.5rem;
+    }
+
+    .section-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.3rem;
+    }
+
+    .section-sub {
+      font-size: 0.8rem;
+      color: var(--muted);
+      margin-bottom: 0.8rem;
+    }
+
+    .card {
+      background: rgba(15, 23, 42, 0.96);
+      border-radius: var(--radius-lg);
+      border: 1px solid var(--border);
+      padding: 1rem;
+      box-shadow: 0 12px 30px rgba(15, 23, 42, 0.8);
+    }
+
+    .grid-market {
+      display: grid;
+      grid-template-columns: repeat(5, minmax(0, 1fr));
+      gap: 0.7rem;
+    }
+
+    .stock-card {
+      padding: 0.7rem 0.75rem;
+      border-radius: 12px;
+      border: 1px solid rgba(31, 41, 55, 0.9);
+      background: radial-gradient(circle at top left, #111827, #020617);
+      cursor: pointer;
+      transition: transform 0.13s ease-out, box-shadow 0.13s ease-out, border-color 0.13s ease-out;
+      font-size: 0.8rem;
+    }
+
+    .stock-card:hover {
+      transform: translateY(-2px);
+      box-shadow: 0 12px 25px rgba(15, 23, 42, 0.9);
+      border-color: rgba(129, 140, 248, 0.9);
+    }
+
+    .stock-name {
+      font-weight: 600;
+      font-size: 0.9rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .stock-price {
+      font-size: 1rem;
+      font-weight: 600;
+      margin-bottom: 0.1rem;
+    }
+
+    .stock-change {
+      font-size: 0.8rem;
+    }
+
+    .green {
+      color: var(--accent);
+    }
+
+    .red {
+      color: var(--accent-red);
+    }
+
+    .layout-2col {
+      display: grid;
+      grid-template-columns: 1.4fr 1fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    .layout-2col-bottom {
+      display: grid;
+      grid-template-columns: 1.1fr 0.9fr;
+      gap: 1rem;
+      margin-top: 1rem;
+    }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      font-size: 0.78rem;
+    }
+
+    th,
+    td {
+      padding: 0.45rem 0.25rem;
+      border-bottom: 1px solid rgba(31, 41, 55, 0.9);
+      text-align: left;
+      white-space: nowrap;
+    }
+
+    th {
+      color: var(--muted);
+      font-weight: 500;
+      font-size: 0.75rem;
+    }
+
+    tbody tr:hover {
+      background: rgba(15, 23, 42, 0.9);
+    }
+
+    .money-controls {
+      display: flex;
+      gap: 0.4rem;
+      align-items: center;
+      flex-wrap: wrap;
+    }
+
+    .money-controls input {
+      background: rgba(15, 23, 42, 0.95);
+      border-radius: 999px;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      padding: 0.35rem 0.7rem;
+      color: var(--text);
+      font-size: 0.8rem;
+      outline: none;
+      width: 120px;
+    }
+
+    .money-controls input:focus {
+      border-color: rgba(129, 140, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+    }
+
+    .overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0, 0, 0, 0.7);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      z-index: 30;
+    }
+
+    .overlay.show {
+      display: flex;
+    }
+
+    .modal {
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: var(--radius-lg);
+      padding: 1.2rem 1.3rem;
+      width: 360px;
+      max-width: 92vw;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      box-shadow: var(--shadow-soft);
+      font-size: 0.85rem;
+    }
+
+    .modal-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 0.6rem;
+    }
+
+    .modal-title {
+      font-weight: 600;
+      font-size: 0.95rem;
+    }
+
+    .modal-close {
+      cursor: pointer;
+      font-size: 1.2rem;
+      color: var(--muted);
+    }
+
+    .modal label {
+      font-size: 0.8rem;
+      color: var(--muted);
+      display: block;
+      margin-top: 0.5rem;
+      margin-bottom: 0.2rem;
+    }
+
+    .modal input {
+      width: 100%;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(148, 163, 184, 0.6);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 0.45rem 0.6rem;
+      color: var(--text);
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .modal input:focus {
+      border-color: rgba(129, 140, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+    }
+
+    .modal-actions {
+      display: flex;
+      gap: 0.45rem;
+      margin-top: 0.8rem;
+    }
+
+    .btn-danger {
+      background: linear-gradient(135deg, #f97373, #ef4444);
+      color: white;
+      border-color: transparent;
+      box-shadow: 0 10px 25px rgba(248, 113, 113, 0.5);
+    }
+
+    .btn-muted {
+      background: rgba(15, 23, 42, 0.96);
+      color: var(--muted);
+      border-color: rgba(148, 163, 184, 0.7);
+    }
+
+    #authOverlay {
+      position: fixed;
+      inset: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: radial-gradient(circle at top, rgba(15, 23, 42, 0.97), rgba(3, 7, 18, 0.98));
+      z-index: 40;
+    }
+
+    .auth-card {
+      width: 340px;
+      max-width: 92vw;
+      padding: 1.4rem 1.5rem 1.3rem;
+      background: rgba(15, 23, 42, 0.98);
+      border-radius: 18px;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      box-shadow: 0 20px 50px rgba(0, 0, 0, 0.8);
+      font-size: 0.85rem;
+    }
+
+    .auth-title {
+      font-size: 1.1rem;
+      font-weight: 600;
+      margin-bottom: 0.2rem;
+    }
+
+    .auth-sub {
+      font-size: 0.78rem;
+      color: var(--muted);
+      margin-bottom: 0.9rem;
+    }
+
+    .auth-tabs {
+      display: inline-flex;
+      padding: 0.2rem;
+      border-radius: 999px;
+      background: rgba(15, 23, 42, 0.96);
+      border: 1px solid rgba(55, 65, 81, 0.9);
+      margin-bottom: 0.9rem;
+    }
+
+    .auth-tab {
+      border-radius: 999px;
+      padding: 0.3rem 0.9rem;
+      border: none;
+      cursor: pointer;
+      font-size: 0.8rem;
+      background: transparent;
+      color: var(--muted);
+    }
+
+    .auth-tab.active {
+      background: linear-gradient(135deg, #4f46e5, #22c55e);
+      color: white;
+    }
+
+    .auth-field {
+      margin-bottom: 0.6rem;
+    }
+
+    .auth-field label {
+      font-size: 0.78rem;
+      color: var(--muted);
+      display: block;
+      margin-bottom: 0.15rem;
+    }
+
+    .auth-field input {
+      width: 100%;
+      border-radius: 0.7rem;
+      border: 1px solid rgba(148, 163, 184, 0.7);
+      background: rgba(15, 23, 42, 0.98);
+      padding: 0.45rem 0.6rem;
+      color: var(--text);
+      font-size: 0.82rem;
+      outline: none;
+    }
+
+    .auth-field input:focus {
+      border-color: rgba(129, 140, 248, 0.9);
+      box-shadow: 0 0 0 1px rgba(129, 140, 248, 0.7);
+    }
+
+    .auth-footer {
+      font-size: 0.72rem;
+      color: var(--muted);
+      margin-top: 0.6rem;
+    }
+
+    .chart-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: baseline;
+      margin-bottom: 0.4rem;
+    }
+
+    .chart-header span {
+      font-size: 0.8rem;
+      color: var(--muted);
+    }
+
+    canvas {
+      width: 100%;
+      border-radius: 12px;
+      background: radial-gradient(circle at top left, #020617, #020617 60%, #000 100%);
+      border: 1px solid rgba(31, 41, 55, 0.95);
+    }
+
+    @media (max-width: 1024px) {
+      .grid-market {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+      }
+      .layout-2col,
+      .layout-2col-bottom {
+        grid-template-columns: minmax(0, 1fr);
+      }
+    }
+
+    @media (max-width: 640px) {
+      nav {
+        padding-inline: 1rem;
+      }
+      .wrapper {
+        padding-inline: 1rem;
+      }
+      .grid-market {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+      }
+      .nav-right {
+        justify-content: flex-start;
+      }
+    }
+  </style>
+</head>
+<body>
+  
+  <div id="authOverlay">
+    <div class="auth-card">
+      <div class="auth-title">Welcome to Virtual Trading System</div>
+      <div class="auth-sub" id="auth-sub-text">Sign up any username, email & password.</div>
+
+      <div class="auth-tabs">
+        <button class="auth-tab active" id="tab-signup" onclick="setAuthMode('signup')">Sign up</button>
+        <button class="auth-tab" id="tab-login" onclick="setAuthMode('login')">Login</button>
+      </div>
+
+      <div class="auth-field">
+        <label for="auth-username">Username</label>
+        <input id="auth-username" placeholder="Any name" />
+      </div>
+      <div class="auth-field">
+        <label for="auth-email">Email</label>
+        <input id="auth-email" type="email" placeholder="example@gmail.com"/>
+      </div>
+      <div class="auth-field">
+        <label for="auth-password">Password</label>
+        <input id="auth-password" type="password" placeholder="Any password" />
+      </div>
+
+      <button class="btn btn-primary" style="width: 100%; margin-top: 0.4rem;" onclick="handleAuth()">Continue</button>
+    </div>
+  </div>
+
+
+  <nav>
+    <div class="nav-left">
+      <div class="logo-mark">VT</div>
+      <div class="brand">
+        <span>Trading Learning Platform</span>
+        <span>Stock trading for Students <br> Come on Students Let's Rock</span>
+      </div>
+    </div>
+    <div class="nav-right">
+      <div class="badge">
+        👤 <span id="nav-username">Guest</span>
+      </div>
+      <div class="wallet">
+        💰 <span>Wallet:</span>
+        <span class="wallet-amount">₹<span id="walletAmount">0</span></span>
+      </div>
+      <div class="money-controls">
+        <input id="moneyAmount" type="number" min="1" placeholder="Amount (₹)">
+        <button class="btn" onclick="depositMoney()">Deposit</button>
+        <button class="btn btn-muted" onclick="withdrawMoney()">Withdraw</button>
+      </div>
+      <button class="btn" onclick="logout()">Logout</button>
+    </div>
+  </nav>
+
+  <main class="wrapper" id="app">
+    <section>
+      <div class="section-title">Market Overview</div>
+      <div class="section-sub">
+        Click any company to open Buy / Sell.
+      </div>
+      <div class="grid-market" id="marketGrid"></div>
+    </section>
+
+    <section class="layout-2col">
+      <div class="card">
+        <div class="chart-header">
+          <div class="section-title" style="margin-bottom: 0;">Price Chart</div>
+          <span id="chartMeta">Select a stock card to view chart</span>
+        </div>
+        <canvas id="chartCanvas" width="700" height="260"></canvas>
+      </div>
+        
+
+      <div class="card">
+        <div class="section-title">Portfolio</div>
+        <div class="section-sub">Holdings based on your Buy / Sell actions.</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Company</th>
+              <th>Qty</th>
+              <th>Avg Buy</th>
+              <th>Current</th>
+              <th>P/L</th>
+            </tr>
+          </thead>
+          <tbody id="portfolioBody"></tbody>
+        </table>
+      </div>
+    </section>
+
+    <section class="layout-2col-bottom">
+      <div class="card">
+        <div class="section-title">Order History</div>
+        <div class="section-sub">Recent trades & wallet changes for your account.</div>
+        <table>
+          <thead>
+            <tr>
+              <th>Time</th>
+              <th>Type</th>
+              <th>Stock</th>
+              <th>Qty</th>
+              <th>Price</th>
+              <th>Total</th>
+            </tr>
+          </thead>
+          <tbody id="historyBody"></tbody>
+        </table>
+      </div>
+
+      <div class="card">
+        <div class="section-title">Leaderboard</div>
+        <div class="section-sub"></div>
+        <table>
+          <thead>
+            <tr>
+              <th>#</th>
+              <th>User</th>
+              <th>Net Worth</th>
+              <th>Wallet</th>
+            </tr>
+          </thead>
+          <tbody id="leaderboardBody"></tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <div class="overlay" id="tradeOverlay">
+    <div class="modal">
+      <div class="modal-header">
+        <div>
+          <div class="modal-title" id="tradeTitle">Trade</div>
+          <div style="font-size: 0.78rem; color: var(--muted);">
+            Current price: ₹<span id="tradePrice"></span>
+          </div>
+        </div>
+        <div class="modal-close" onclick="closeTrade()">×</div>
+      </div>
+
+      <label for="tradeQty">Quantity</label>
+      <input id="tradeQty" type="number" min="1" placeholder="Enter number of shares">
+
+      <div style="font-size: 0.78rem; color: var(--muted); margin-top: 0.4rem;">
+        Est. cost / value: ₹<span id="tradeEst">0</span>
+      </div>
+
+      <div class="modal-actions">
+        <button class="btn btn-primary" style="flex: 1;" onclick="buyStock()">Buy</button>
+        <button class="btn btn-danger" style="flex: 1;" onclick="sellStock()">Sell</button>
+        <button class="btn btn-muted" style="flex: 1;" onclick="closeTrade()">Cancel</button>
+      </div>
+    </div>
+  </div>
+
+<script>
+    const API_URL = "http://localhost:8088/api";
+    const INITIAL_WALLET = 100000;
+    const CURRENT_USER_KEY = "vtp_currentUser";
+
+    let currentUser = null;
+    let selectedCompany = null;
+    let authMode = "signup";
+
+    let companies = [
+        { name: "Reliance", price: 2450, change: 0 },
+        { name: "Tata Motors", price: 920, change: 0 },
+        { name: "HDFC Bank", price: 1720, change: 0 },
+        { name: "Adani Ports", price: 1180, change: 0 },
+        { name: "Infosys", price: 1625, change: 0 },
+        { name: "TCS", price: 3680, change: 0 },
+        { name: "SBI", price: 650, change: 0 },
+        { name: "ICICI Bank", price: 1085, change: 0 },
+        { name: "Wipro", price: 470, change: 0 },
+        { name: "Asian Paints", price: 3060, change: 0 }
+    ];
+
+    // --- AUTHENTICATION ---
+    function setAuthMode(mode) {
+        authMode = mode;
+        document.getElementById("tab-signup").classList.toggle("active", mode === "signup");
+        document.getElementById("tab-login").classList.toggle("active", mode === "login");
+        document.getElementById("auth-sub-text").textContent = mode === "signup" 
+            ? "Sign up with your details to start trading." 
+            : "Enter your credentials to access your account.";
+    }
+
+    async function handleAuth() {
+        const username = document.getElementById("auth-username").value.trim();
+        const email = document.getElementById("auth-email").value.trim(); // Captured Email
+        const password = document.getElementById("auth-password").value;
+
+        if (!username || !password || !email) return alert("Please fill all fields, including email.");
+
+        try {
+            const response = await fetch(`${API_URL}/auth`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                // Sending email along with other credentials
+                body: JSON.stringify({ username, email, password, mode: authMode })
+            });
+
+            if (response.ok) {
+                currentUser = await response.json();
+                localStorage.setItem(CURRENT_USER_KEY, currentUser.username);
+                enterApp();
+            } else {
+                alert("Auth failed. Check if Node server is running.");
+            }
+        } catch (e) {
+            alert("Connection error to backend.");
+        }
+    }
+
+    function logout() {
+        localStorage.removeItem(CURRENT_USER_KEY);
+        location.reload();
+    }
+
+    function enterApp() {
+        document.getElementById("authOverlay").style.display = "none";
+        document.getElementById("nav-username").textContent = currentUser.username;
+        selectedCompany = companies[0];
+        updateAppUI();
+        renderMarket();
+        updateChart();
+    }
+
+    // --- DATA SYNCING ---
+    async function syncWithFirebase() {
+        if (!currentUser) return;
+        try {
+            await fetch(`${API_URL}/sync`, {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify({ username: currentUser.username, userData: currentUser })
+            });
+        } catch (e) { console.error("Cloud sync failed"); }
+    }
+
+    // --- MARKET & TRADING ---
+    function renderMarket() {
+        const grid = document.getElementById("marketGrid");
+        grid.innerHTML = companies.map((c, i) => `
+            <div class="stock-card" onclick="openTrade(${i})">
+                <div class="stock-name">${c.name}</div>
+                <div class="stock-price ${c.change >= 0 ? 'green' : 'red'}">₹${c.price}</div>
+                <div class="stock-change ${c.change >= 0 ? 'green' : 'red'}">
+                    ${c.change >= 0 ? '+' : ''}${c.change} today
+                </div>
+            </div>
+        `).join('');
+    }
+
+    function openTrade(index) {
+        selectedCompany = companies[index];
+        document.getElementById("tradeTitle").textContent = selectedCompany.name;
+        document.getElementById("tradePrice").textContent = selectedCompany.price;
+        document.getElementById("tradeQty").value = "";
+        document.getElementById("tradeEst").textContent = "0";
+        document.getElementById("tradeOverlay").classList.add("show");
+        updateChart();
+    }
+
+    function closeTrade() { document.getElementById("tradeOverlay").classList.remove("show"); }
+
+    document.getElementById("tradeQty").addEventListener("input", function() {
+        const qty = parseInt(this.value) || 0;
+        document.getElementById("tradeEst").textContent = (qty * selectedCompany.price).toFixed(0);
+    });
+
+    async function buyStock() {
+        const qty = parseInt(document.getElementById("tradeQty").value);
+        if (!qty || qty <= 0) return alert("Enter quantity");
+        const cost = qty * selectedCompany.price;
+
+        if (currentUser.wallet < cost) return alert("Insufficient funds");
+
+        currentUser.wallet -= cost;
+        if (!currentUser.portfolio[selectedCompany.name]) {
+            currentUser.portfolio[selectedCompany.name] = { qty: 0, avgPrice: selectedCompany.price };
+        }
+        const pos = currentUser.portfolio[selectedCompany.name];
+        pos.avgPrice = ((pos.avgPrice * pos.qty) + cost) / (pos.qty + qty);
+        pos.qty += qty;
+
+        addHistory("BUY", selectedCompany.name, qty, selectedCompany.price, -cost);
+        await syncWithFirebase();
+        updateAppUI();
+        closeTrade();
+    }
+
+    async function sellStock() {
+        const qty = parseInt(document.getElementById("tradeQty").value);
+        const pos = currentUser.portfolio[selectedCompany.name];
+        if (!pos || pos.qty < qty) return alert("Not enough shares");
+
+        const value = qty * selectedCompany.price;
+        currentUser.wallet += value;
+        pos.qty -= qty;
+        if (pos.qty === 0) delete currentUser.portfolio[selectedCompany.name];
+
+        addHistory("SELL", selectedCompany.name, qty, selectedCompany.price, value);
+        await syncWithFirebase();
+        updateAppUI();
+        closeTrade();
+    }
+
+    // --- WALLET CONTROLS ---
+    async function depositMoney() {
+        const amt = parseInt(document.getElementById("moneyAmount").value);
+        if (!amt || amt <= 0) return;
+        currentUser.wallet += amt;
+        addHistory("DEPOSIT", "-", 0, 0, amt);
+        await syncWithFirebase();
+        updateAppUI();
+        document.getElementById("moneyAmount").value = "";
+    }
+
+    async function withdrawMoney() {
+        const amt = parseInt(document.getElementById("moneyAmount").value);
+        if (!amt || amt > currentUser.wallet) return alert("Invalid amount");
+        currentUser.wallet -= amt;
+        addHistory("WITHDRAW", "-", 0, 0, -amt);
+        await syncWithFirebase();
+        updateAppUI();
+        document.getElementById("moneyAmount").value = "";
+    }
+
+    // --- UI UPDATES ---
+    function updateAppUI() {
+        document.getElementById("walletAmount").textContent = currentUser.wallet.toFixed(0);
+        updatePortfolioTable();
+        updateHistoryTable();
+        renderLeaderboard();
+    }
+
+    function updatePortfolioTable() {
+        const body = document.getElementById("portfolioBody");
+        const entries = Object.entries(currentUser.portfolio);
+        if (entries.length === 0) {
+            body.innerHTML = '<tr><td colspan="5">No holdings.</td></tr>';
+            return;
+        }
+        body.innerHTML = entries.map(([name, pos]) => {
+            const curPrice = companies.find(c => c.name === name).price;
+            const pl = (curPrice - pos.avgPrice) * pos.qty;
+            return `<tr><td>${name}</td><td>${pos.qty}</td><td>₹${pos.avgPrice.toFixed(1)}</td><td>₹${curPrice}</td><td class="${pl>=0?'green':'red'}">₹${pl.toFixed(0)}</td></tr>`;
+        }).join('');
+    }
+
+    function addHistory(type, stock, qty, price, total) {
+        if(!currentUser.history) currentUser.history = [];
+        currentUser.history.push({ time: new Date().toLocaleTimeString(), type, stock, qty, price, total });
+    }
+
+    function updateHistoryTable() {
+        const body = document.getElementById("historyBody");
+        body.innerHTML = (currentUser.history || []).slice(-10).reverse().map(h => `
+            <tr><td>${h.time}</td><td>${h.type}</td><td>${h.stock}</td><td>${h.qty || '-'}</td><td>${h.price?'₹'+h.price:'-'}</td><td class="${h.total>0?'green':'red'}">₹${h.total}</td></tr>
+        `).join('');
+    }
+
+    async function renderLeaderboard() {
+        try {
+            const res = await fetch(`${API_URL}/leaderboard`);
+            const users = await res.json();
+            const rows = users.map(u => {
+                let pVal = 0;
+                Object.entries(u.portfolio || {}).forEach(([name, pos]) => {
+                    const c = companies.find(x => x.name === name);
+                    if(c) pVal += pos.qty * c.price;
+                });
+                return { name: u.username, worth: u.wallet + pVal, wallet: u.wallet };
+            }).sort((a,b) => b.worth - a.worth);
+
+            document.getElementById("leaderboardBody").innerHTML = rows.map((r, i) => `
+                <tr><td>${i+1}</td><td>${r.name}</td><td>₹${r.worth.toFixed(0)}</td><td>₹${r.wallet.toFixed(0)}</td></tr>
+            `).join('');
+        } catch (e) { console.error("Leaderboard error"); }
+    }
+
+    // --- CHARTS ---
+    function updateChart() {
+        const canvas = document.getElementById("chartCanvas");
+        const ctx = canvas.getContext("2d");
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
+        
+        const base = selectedCompany ? selectedCompany.price : 2000;
+        let last = base;
+        const candles = Array.from({length: 30}, () => {
+            let o = last; let c = o + (Math.random()*40-20);
+            let h = Math.max(o,c) + 5; let l = Math.min(o,c) - 5;
+            last = c;
+            return {o, c, h, l};
+        });
+
+        const max = Math.max(...candles.map(ca => ca.h));
+        const min = Math.min(...candles.map(ca => ca.l));
+        const range = max - min;
+        const scale = (canvas.height - 40) / range;
+
+        candles.forEach((ca, i) => {
+            const x = 40 + (i * 20);
+            const color = ca.c >= ca.o ? "#22c55e" : "#f97373";
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(x, canvas.height - (ca.h - min) * scale - 20);
+            ctx.lineTo(x, canvas.height - (ca.l - min) * scale - 20);
+            ctx.stroke();
+            ctx.fillStyle = color;
+            ctx.fillRect(x-5, canvas.height - (Math.max(ca.o, ca.c) - min) * scale - 20, 10, Math.abs(ca.o - ca.c) * scale + 1);
+        });
+        document.getElementById("chartMeta").textContent = `${selectedCompany.name} · Live View`;
+    }
+
+    setInterval(() => {
+        companies.forEach(c => {
+            c.change = Math.floor(Math.random() * 40 - 20);
+            c.price = Math.max(10, c.price + c.change);
+        });
+        renderMarket();
+        if (currentUser) {
+            updateAppUI();
+            updateChart();
+        }
+    }, 2000);
+
+    window.onload = () => {
+        const saved = localStorage.getItem(CURRENT_USER_KEY);
+        // Always show overlay on reload to ensure proper auth sync
+        document.getElementById("authOverlay").style.display = "flex";
+    };
+</script>
+</body>
+</html>

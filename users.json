@@ -1,0 +1,156 @@
+{
+  "asdf": {
+    "username": "asdf",
+    "email": "parthnamdas@gmail.com",
+    "password": "asdfg",
+    "wallet": 100000,
+    "portfolio": {},
+    "history": []
+  },
+  "zxcv": {
+    "username": "zxcv",
+    "email": "asdfg",
+    "password": "sdfv",
+    "wallet": 100000,
+    "portfolio": {},
+    "history": []
+  },
+  "sdbgfnh": {
+    "username": "sdbgfnh",
+    "email": "asdbgfn",
+    "password": "asdfgnh",
+    "wallet": null,
+    "portfolio": {
+      "Wipro": {
+        "qty": null,
+        "avgPrice": 472
+      }
+    },
+    "history": [
+      {
+        "time": "10:07:43 PM",
+        "type": "BUY",
+        "stock": "Tata Motors",
+        "qty": 100,
+        "price": 842,
+        "total": -84200
+      },
+      {
+        "time": "10:08:10 PM",
+        "type": "SELL",
+        "stock": "Tata Motors",
+        "qty": 100,
+        "price": 859,
+        "total": 85900
+      },
+      {
+        "time": "10:08:37 PM",
+        "type": "BUY",
+        "stock": "Wipro",
+        "qty": 200,
+        "price": 472,
+        "total": -94400
+      },
+      {
+        "time": "10:09:47 PM",
+        "type": "SELL",
+        "stock": "Wipro",
+        "qty": null,
+        "price": 407,
+        "total": null
+      },
+      {
+        "time": "10:09:55 PM",
+        "type": "SELL",
+        "stock": "Wipro",
+        "qty": 100,
+        "price": 388,
+        "total": 38800
+      }
+    ]
+  },
+  "om": {
+    "username": "om",
+    "email": "parthnamdas@gmail.com",
+    "password": "2879213879",
+    "wallet": null,
+    "portfolio": {
+      "HDFC Bank": {
+        "qty": null,
+        "avgPrice": null
+      }
+    },
+    "history": [
+      {
+        "time": "10:24:10 PM",
+        "type": "BUY",
+        "stock": "HDFC Bank",
+        "qty": 10,
+        "price": 1820,
+        "total": -18200
+      },
+      {
+        "time": "10:25:28 PM",
+        "type": "DEPOSIT",
+        "stock": "-",
+        "qty": 0,
+        "price": 0,
+        "total": 12440
+      },
+      {
+        "time": "10:25:43 PM",
+        "type": "SELL",
+        "stock": "HDFC Bank",
+        "qty": null,
+        "price": 1895,
+        "total": null
+      },
+      {
+        "time": "10:26:00 PM",
+        "type": "BUY",
+        "stock": "HDFC Bank",
+        "qty": 6,
+        "price": 1909,
+        "total": -11454
+      }
+    ]
+  },
+  "qsdwevr": {
+    "username": "qsdwevr",
+    "email": "asfvasdcfvg",
+    "password": "sdfgvbh",
+    "wallet": 95100,
+    "portfolio": {
+      "Wipro": {
+        "qty": 10,
+        "avgPrice": 490
+      }
+    },
+    "history": [
+      {
+        "time": "8:55:36 AM",
+        "type": "BUY",
+        "stock": "Wipro",
+        "qty": 10,
+        "price": 490,
+        "total": -4900
+      }
+    ]
+  },
+  "wsdf": {
+    "username": "wsdf",
+    "email": "sdf",
+    "password": "asdfg",
+    "wallet": 100000,
+    "portfolio": {},
+    "history": []
+  },
+  "wdefrfgrtndwsdfgb": {
+    "username": "wdefrfgrtndwsdfgb",
+    "email": "sdfgb",
+    "password": "sdfgbn",
+    "wallet": 100000,
+    "portfolio": {},
+    "history": []
+  }
+}
